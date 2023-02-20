@@ -12,10 +12,9 @@ import {
   CardBody,
   WrapItem,
   Wrap,
+  Button,
 } from "@chakra-ui/react";
 import SearchModal from "components/SearchModal";
-import { count } from "console";
-import { useRouter } from "next/router";
 import CountryModal from "../../../components/CountryModal";
 
 const africaImages = [
@@ -233,8 +232,18 @@ export default function Region({ region, countryObject, universityList }: any) {
         padding="5"
         borderBottom="1px solid gray"
       >
-        <Heading size="xl">Eagles Abroad</Heading>
-        <InputGroup ml="5" size="lg" w="lg" onClick={onSearchOpen}>
+        <Button
+          size="lg"
+          bgColor={"maroon"}
+          _hover={{ backgroundColor: "#610018" }}
+          color="gold"
+        >
+          See Who&apos;s Going Abroad
+        </Button>
+        <Heading size="xl" ml="40">
+          Eagles Abroad
+        </Heading>
+        <InputGroup ml="5" size="lg" w="sm" onClick={onSearchOpen}>
           <InputLeftElement cursor={"pointer"}>
             <Search2Icon />
           </InputLeftElement>

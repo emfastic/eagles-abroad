@@ -1,5 +1,9 @@
-import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import {
+  useSession,
+  useSupabaseClient,
+  useUser,
+} from "@supabase/auth-helpers-react";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import Account from "../../components/Account";
 import { useEffect, useState } from "react";
 import {
@@ -25,9 +29,9 @@ import { University } from "index";
 import { useRouter } from "next/router";
 import { Search2Icon } from "@chakra-ui/icons";
 import SearchModal from "components/SearchModal";
+import LoginModal from "components/LoginModal";
 
 const Home = () => {
-  const session = useSession();
   const router = useRouter();
   const supabase = useSupabaseClient();
   const [regionState, setRegionState] = useState<any>({});
@@ -38,6 +42,12 @@ const Home = () => {
     isOpen: isSearchOpen,
     onOpen: onSearchOpen,
     onClose: onSearchClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isLoginOpen,
+    onOpen: onLoginOpen,
+    onClose: onLoginClose,
   } = useDisclosure();
 
   const regions: {
@@ -141,11 +151,28 @@ const Home = () => {
         padding="5"
         borderBottom="1px solid gray"
       >
-        <Heading size="xl">Eagles Abroad</Heading>
+        <Button
+          size="lg"
+          bgColor={"maroon"}
+          _hover={{ backgroundColor: "#610018" }}
+          color="gold"
+          onClick={onLoginOpen}
+        >
+          See Who&apos;s Going Abroad
+        </Button>
+        <LoginModal
+          isOpen={isLoginOpen}
+          onOpen={onLoginOpen}
+          onClose={onLoginClose}
+          text={"test"}
+        />
+        <Heading size="xl" ml="40">
+          Eagles Abroad
+        </Heading>
         <InputGroup
           ml="5"
           size="lg"
-          w="lg"
+          w="sm"
           onClick={onSearchOpen}
           cursor={"pointer"}
         >

@@ -11,7 +11,9 @@ import {
   Tag,
   Avatar,
   Badge,
+  Button,
 } from "@chakra-ui/react";
+import { useUser } from "@supabase/auth-helpers-react";
 import { supabase } from "lib/supabaseClient";
 import React from "react";
 
@@ -254,6 +256,8 @@ export async function getStaticProps({ params }: any) {
 export default function University({ university }: any) {
   let factList = university.facts.split(".").slice(0, -1);
 
+  const user = useUser();
+
   return (
     <>
       <Flex
@@ -265,17 +269,44 @@ export default function University({ university }: any) {
         pl="10"
         borderBottom="1px solid gray"
       >
+        <Button
+          size="lg"
+          bgColor={"maroon"}
+          _hover={{ backgroundColor: "#610018" }}
+          color="gold"
+        >
+          See Who&apos;s Going Abroad
+        </Button>
         <Heading size="xl">Eagles Abroad</Heading>
-        <Heading size="lg">{university.university}</Heading>
       </Flex>
-      <HStack align="top" mt="10" spacing="10" justify="center">
+      <Heading size="xl" textAlign={"center"} mt="5">
+        {university.university}
+      </Heading>
+      <HStack align="top" mt="5" mb="10" spacing="10" justify="center">
         <Box w="40%" bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
           <Flex justify="center">
             <Heading size="lg" textAlign={"center"} mb="4">
               Who&apos;s Going?
             </Heading>
           </Flex>
-          <VStack align="left">
+          <VStack align="left" spacing="5">
+            <Tag
+              variant="subtle"
+              p="3"
+              color="black"
+              display={"flex"}
+              alignItems="center"
+              outlineColor="maroon"
+              justifyContent={"space-between"}
+            >
+              <Flex ml="2" fontSize="2xl" alignItems={"center"}>
+                <Avatar src="https://lh3.googleusercontent.com/a/AEdFTp5z2K5TWv3Xpd5or8l-bLcEAz2Wo_VB75TmSOFA=s96-c"></Avatar>
+                <Box ml="4">{user ? " " : "????"}</Box>
+              </Flex>
+              <Badge variant="subtle" fontSize="lg" colorScheme="red">
+                Spring
+              </Badge>
+            </Tag>
             <Tag
               variant="subtle"
               p="3"
@@ -287,7 +318,7 @@ export default function University({ university }: any) {
             >
               <Flex ml="2" fontSize="2xl" alignItems={"center"}>
                 <Avatar></Avatar>
-                <Box ml="4">?????</Box>
+                <Box ml="4">You?</Box>
               </Flex>
               <Badge variant="subtle" fontSize="lg" colorScheme="red">
                 Spring
