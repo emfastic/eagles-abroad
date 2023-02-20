@@ -1,6 +1,6 @@
 import { supabase } from "../../../lib/supabaseClient";
 import React, { useEffect, useState } from "react";
-import { Search2Icon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, Search2Icon } from "@chakra-ui/icons";
 import {
   Flex,
   Heading,
@@ -13,9 +13,13 @@ import {
   WrapItem,
   Wrap,
   Button,
+  IconButton,
+  HStack,
 } from "@chakra-ui/react";
 import SearchModal from "components/SearchModal";
 import CountryModal from "../../../components/CountryModal";
+import { useRouter } from "next/router";
+import LoginModal from "components/LoginModal";
 
 const africaImages = [
   "https://images.unsplash.com/photo-1539768942893-daf53e448371?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80",
@@ -184,6 +188,14 @@ export default function Region({ region, countryObject, universityList }: any) {
     onClose: onCountryModalClose,
   } = useDisclosure();
 
+  const {
+    isOpen: isLoginOpen,
+    onOpen: onLoginOpen,
+    onClose: onLoginClose,
+  } = useDisclosure();
+
+  const router = useRouter();
+
   const [country, setCountry] = useState("");
   const [countryUniversityList, setCountryUniversityList] = useState<string[]>(
     []
@@ -232,18 +244,30 @@ export default function Region({ region, countryObject, universityList }: any) {
         padding="5"
         borderBottom="1px solid gray"
       >
-        <Button
-          size="lg"
-          bgColor={"maroon"}
-          _hover={{ backgroundColor: "#610018" }}
-          color="gold"
-        >
-          See Who&apos;s Going Abroad
-        </Button>
+        <HStack align="center">
+          <IconButton
+            aria-label="back"
+            icon={<ChevronLeftIcon />}
+            bg="maroon"
+            _hover={{ backgroundColor: "#610018" }}
+            color="gold"
+            size="lg"
+            onClick={() => router.back()}
+          />
+          <Button
+            size="lg"
+            bgColor={"maroon"}
+            _hover={{ backgroundColor: "#610018" }}
+            color="gold"
+            onClick={onLoginOpen}
+          >
+            See Who&apos;s Going Abroad
+          </Button>
+        </HStack>
         <Heading size="xl" ml="40">
           Eagles Abroad
         </Heading>
-        <InputGroup ml="5" size="lg" w="sm" onClick={onSearchOpen}>
+        <InputGroup ml="5" size="lg" w="md" onClick={onSearchOpen}>
           <InputLeftElement cursor={"pointer"}>
             <Search2Icon />
           </InputLeftElement>
@@ -266,6 +290,7 @@ export default function Region({ region, countryObject, universityList }: any) {
         country={country}
         region={region}
       />
+      <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       <Wrap justify="center" mt="5" mb="5" w="100%">
         {countryCards}
       </Wrap>

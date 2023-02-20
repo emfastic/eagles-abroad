@@ -15,13 +15,7 @@ import React from "react";
 import GoogleButton from "react-google-button";
 import { supabase } from "../lib/supabaseClient";
 
-export default function LoginModal({
-  onOpen,
-  isOpen,
-  onClose,
-  text,
-  handleSignIn,
-}: any) {
+export default function LoginModal({ isOpen, onClose }: any) {
   async function handleLogin() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",

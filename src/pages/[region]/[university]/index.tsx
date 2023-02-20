@@ -1,4 +1,4 @@
-import { Search2Icon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, Search2Icon } from "@chakra-ui/icons";
 import {
   Flex,
   Heading,
@@ -12,9 +12,13 @@ import {
   Avatar,
   Badge,
   Button,
+  IconButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useUser } from "@supabase/auth-helpers-react";
+import LoginModal from "components/LoginModal";
 import { supabase } from "lib/supabaseClient";
+import { useRouter } from "next/router";
 import React from "react";
 
 const africanUniversities = [
@@ -257,6 +261,13 @@ export default function University({ university }: any) {
   let factList = university.facts.split(".").slice(0, -1);
 
   const user = useUser();
+  const router = useRouter();
+
+  const {
+    isOpen: isLoginOpen,
+    onOpen: onLoginOpen,
+    onClose: onLoginClose,
+  } = useDisclosure();
 
   return (
     <>
@@ -269,15 +280,28 @@ export default function University({ university }: any) {
         pl="10"
         borderBottom="1px solid gray"
       >
+        <IconButton
+          aria-label="back"
+          icon={<ChevronLeftIcon />}
+          bg="maroon"
+          _hover={{ backgroundColor: "#610018" }}
+          color="gold"
+          onClick={() => router.back()}
+          size="lg"
+        />
+        <Heading size="xl" ml="40">
+          Eagles Abroad
+        </Heading>
         <Button
           size="lg"
           bgColor={"maroon"}
           _hover={{ backgroundColor: "#610018" }}
           color="gold"
+          onClick={onLoginOpen}
         >
           See Who&apos;s Going Abroad
         </Button>
-        <Heading size="xl">Eagles Abroad</Heading>
+        <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       </Flex>
       <Heading size="xl" textAlign={"center"} mt="5">
         {university.university}
