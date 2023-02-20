@@ -31,7 +31,9 @@ const Home = () => {
   const router = useRouter();
   const supabase = useSupabaseClient();
   const [regionState, setRegionState] = useState<any>({});
+  const [universityRegionMap, setUniversityRegionMap] = useState<any>({});
   const [universityList, setUniversityList] = useState<string[]>([]);
+
   const {
     isOpen: isSearchOpen,
     onOpen: onSearchOpen,
@@ -68,12 +70,15 @@ const Home = () => {
 
       if (data) {
         let universityList: string[] = [];
+        let universityRegionMap: any = new Map();
         data.forEach((university: University) => {
           regions[university.continent].push(university.university);
           universityList.push(university.university);
+          universityRegionMap.set(university.university, university.continent);
         });
         setRegionState(regions);
         setUniversityList(universityList);
+        setUniversityRegionMap(universityRegionMap);
       } else {
         console.log(error);
       }
@@ -100,8 +105,6 @@ const Home = () => {
     }
     router.push(`/${region}`);
   }
-
-  function handleSearch() {}
 
   const universityCards = Object.keys(regionState).map((region, idx) => {
     return (
@@ -138,15 +141,22 @@ const Home = () => {
         padding="5"
         borderBottom="1px solid gray"
       >
-        <Heading size="lg">Eagles Abroad</Heading>
-        <InputGroup ml="5" size="lg" w="lg" onClick={onSearchOpen}>
-          <InputLeftElement cursor={"pointer"}>
+        <Heading size="xl">Eagles Abroad</Heading>
+        <InputGroup
+          ml="5"
+          size="lg"
+          w="lg"
+          onClick={onSearchOpen}
+          cursor={"pointer"}
+        >
+          <InputLeftElement>
             <Search2Icon />
           </InputLeftElement>
           <Input
-            onChange={handleSearch}
-            placeholder="Search programs"
+            placeholder="Search all programs"
             onClick={onSearchOpen}
+            cursor={"pointer"}
+            isReadOnly={true}
           />
         </InputGroup>
       </Flex>
@@ -154,6 +164,7 @@ const Home = () => {
         isSearchOpen={isSearchOpen}
         onSearchClose={onSearchClose}
         universityList={universityList}
+        universityRegionMap={universityRegionMap}
       />
       <Wrap justify="center" mt="5" mb="5" w="100%">
         {universityCards}

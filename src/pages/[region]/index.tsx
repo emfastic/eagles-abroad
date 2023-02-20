@@ -16,16 +16,17 @@ import {
 import SearchModal from "components/SearchModal";
 import { count } from "console";
 import { useRouter } from "next/router";
+import CountryModal from "../../../components/CountryModal";
 
 const africaImages = [
-  "https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1734&q=80",
   "https://images.unsplash.com/photo-1539768942893-daf53e448371?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80",
-  "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80",
   "https://images.unsplash.com/photo-1589104602532-9cee07f8f62c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1328&q=80",
-  "https://images.unsplash.com/photo-1557849582-5875ac6dee83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2008&q=80",
   "https://images.unsplash.com/photo-1570742544137-3a469196c32b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1738&q=80",
+  "https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1734&q=80",
   "https://images.unsplash.com/photo-1546422724-3c4be0b20cb5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+  "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80",
   "https://images.unsplash.com/photo-1613864309738-9102a9e22883?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80",
+  "https://images.unsplash.com/photo-1557849582-5875ac6dee83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2008&q=80",
 ];
 
 const europeImages = [
@@ -124,9 +125,9 @@ export async function getStaticPaths() {
     "Other",
     "Central America",
     "North America",
-  ].map((country) => {
+  ].map((region) => {
     return {
-      params: { region: country.toString() },
+      params: { region: region.toString() },
     };
   });
 
@@ -172,14 +173,28 @@ export async function getStaticProps({ params }: any) {
 }
 
 export default function Region({ region, countryObject, universityList }: any) {
-  console.log(Object.keys(countryObject).sort());
   const {
     isOpen: isSearchOpen,
     onOpen: onSearchOpen,
     onClose: onSearchClose,
   } = useDisclosure();
 
-  function handleCountryClick() {}
+  const {
+    isOpen: isCountryModalOpen,
+    onOpen: onCountryModalOpen,
+    onClose: onCountryModalClose,
+  } = useDisclosure();
+
+  const [country, setCountry] = useState("");
+  const [countryUniversityList, setCountryUniversityList] = useState<string[]>(
+    []
+  );
+
+  function handleCountryClick(country: string) {
+    setCountry(country);
+    setCountryUniversityList(countryObject[country]);
+    onCountryModalOpen();
+  }
 
   const countryCards = Object.keys(countryObject)
     .sort()
@@ -192,7 +207,7 @@ export default function Region({ region, countryObject, universityList }: any) {
             bgImage={`linear-gradient(rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0)), url(${regionImages[region][idx]})`}
             bgPosition="center"
             bgSize="cover"
-            onClick={() => handleCountryClick()}
+            onClick={() => handleCountryClick(country)}
             cursor="pointer"
           >
             <CardBody
@@ -218,7 +233,7 @@ export default function Region({ region, countryObject, universityList }: any) {
         padding="5"
         borderBottom="1px solid gray"
       >
-        <Heading size="lg">Eagles Abroad</Heading>
+        <Heading size="xl">Eagles Abroad</Heading>
         <InputGroup ml="5" size="lg" w="lg" onClick={onSearchOpen}>
           <InputLeftElement cursor={"pointer"}>
             <Search2Icon />
@@ -234,6 +249,13 @@ export default function Region({ region, countryObject, universityList }: any) {
         onSearchClose={onSearchClose}
         region={region}
         universityList={universityList}
+      />
+      <CountryModal
+        isOpen={isCountryModalOpen}
+        onClose={onCountryModalClose}
+        universityList={countryUniversityList}
+        country={country}
+        region={region}
       />
       <Wrap justify="center" mt="5" mb="5" w="100%">
         {countryCards}

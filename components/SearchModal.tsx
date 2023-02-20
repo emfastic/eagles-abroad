@@ -15,6 +15,7 @@ import {
   VStack,
   Divider,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 export default function SearchModal({
@@ -22,9 +23,11 @@ export default function SearchModal({
   onSearchClose,
   universityList,
   region,
+  universityRegionMap,
 }: any) {
   const [searchResults, setSearchResults] = useState<any>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const router = useRouter();
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchQuery(event.target.value);
@@ -52,6 +55,20 @@ export default function SearchModal({
         _hover={{
           backgroundColor: "#610018",
         }}
+        onClick={() => {
+          if (region) {
+            if (region === "Australia/Pacific Islands") {
+              region = "Australia Pacific Islands";
+            }
+            router.push(`/${region}/${university}`);
+          } else {
+            let region = universityRegionMap.get(university);
+            if (region === "Australia/Pacific Islands") {
+              region = "Australia Pacific Islands";
+            }
+            router.push(`/${region}/${university}`);
+          }
+        }}
       >
         {university}
       </Box>
@@ -70,7 +87,7 @@ export default function SearchModal({
             <Input
               onChange={handleSearch}
               value={searchQuery}
-              placeholder={`Search ${region ? region + " " : ""}programs`}
+              placeholder={`Search ${region ? region + " " : "all "}programs`}
               variant="outlined"
             />
           </InputGroup>
