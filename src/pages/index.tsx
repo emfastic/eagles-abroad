@@ -4,7 +4,6 @@ import {
   useUser,
 } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import Account from "../../components/Account";
 import { useEffect, useState } from "react";
 import {
   Card,
