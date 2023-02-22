@@ -14,12 +14,18 @@ import {
   Button,
   IconButton,
   useDisclosure,
+  Hide,
+  Spinner,
+  Link,
 } from "@chakra-ui/react";
 import { useUser } from "@supabase/auth-helpers-react";
+import EmailModal from "components/EmailModal";
+import Footer from "components/Footer";
 import LoginModal from "components/LoginModal";
 import { supabase } from "lib/supabaseClient";
 import { useRouter } from "next/router";
-import React from "react";
+import { send } from "process";
+import React, { useEffect, useState } from "react";
 
 const africanUniversities = [
   "Al Akhawayn University (AUI)",
@@ -245,23 +251,164 @@ export async function getStaticProps({ params }: any) {
     .select("*")
     .eq("university", university);
 
+  let profileData = null;
+
   if (!data) {
     console.log(error);
     return { notFound: true };
+  } else {
+    let profileResponse = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("abroad_id", data[0].key);
+
+    if (!profileResponse.data) {
+      console.log(error);
+      return { notFound: true };
+    } else {
+      profileData = profileResponse.data;
+    }
   }
 
   return {
     props: {
       university: data[0],
+      profiles: profileData,
     },
   };
 }
 
-export default function University({ university }: any) {
+export default function University({ university, profiles }: any) {
   let factList = university.facts.split(".").slice(0, -1);
 
-  const user = useUser();
   const router = useRouter();
+  const [profile, setProfile] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function getUser() {
+      setIsLoading(true);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id);
+
+        if (!data) {
+          console.log(error);
+        } else {
+          console.log(data[0]);
+          setProfile(data[0]);
+        }
+      }
+      setIsLoading(false);
+    }
+
+    getUser();
+  }, []);
+
+  let profileTags = profiles.map((profile: any) => {
+    return (
+      <Tag
+        key={profile.id}
+        variant="subtle"
+        p="3"
+        color="black"
+        display={"flex"}
+        alignItems="center"
+        outlineColor="maroon"
+        justifyContent={"space-between"}
+      >
+        <Flex ml="2" fontSize="2xl" alignItems={"center"}>
+          <Avatar src={`${profile.avatar_url}`}></Avatar>
+          <Box ml="4">{profile.full_name}</Box>
+        </Flex>
+        <Badge
+          variant="subtle"
+          fontSize="lg"
+          colorScheme={profile.abroad_term === "Spring" ? "red" : "yellow"}
+        >
+          {profile.abroad_term}
+        </Badge>
+      </Tag>
+    );
+  });
+
+  if (profileTags.length === 0) {
+    profileTags = (
+      <>
+        <Tag
+          variant="subtle"
+          p="3"
+          size="lg"
+          color="black"
+          display={"flex"}
+          alignItems="center"
+          outlineColor="maroon"
+          justifyContent={"space-between"}
+        >
+          <Box ml="4">No one has added this location yet!</Box>
+        </Tag>
+        <Tag
+          variant="subtle"
+          p="3"
+          color="black"
+          size="lg"
+          display={"flex"}
+          alignItems="center"
+          outlineColor="maroon"
+          justifyContent={"space-between"}
+        >
+          <Box ml="4">
+            Know someone going?{" "}
+            <Link
+              color="maroon"
+              href={`sms: &body=Heard you're going abroad, signup for eaglesabroad.com to connect with other students going to ${
+                university.country === "Multiple Countries"
+                  ? university.university
+                  : university.country
+              }!`}
+            >
+              Text them about Eagles Abroad!
+            </Link>
+          </Box>
+        </Tag>
+      </>
+    );
+  }
+
+  const hiddenProfileTags = ["user1", "user2", "user3"].map(
+    (profile: any, idx: number) => {
+      return (
+        <Tag
+          key={idx}
+          variant="subtle"
+          p="3"
+          color="black"
+          display={"flex"}
+          alignItems="center"
+          outlineColor="maroon"
+          justifyContent={"space-between"}
+        >
+          <Flex ml="2" fontSize="2xl" alignItems={"center"}>
+            <Avatar></Avatar>
+            <Box ml="4">{idx === 2 ? "You?" : "????"}</Box>
+          </Flex>
+          <Badge
+            variant="subtle"
+            fontSize="lg"
+            colorScheme={profile.abroad_term === "Spring" ? "red" : "yellow"}
+          >
+            {profile.abroad_term}
+          </Badge>
+        </Tag>
+      );
+    }
+  );
 
   const {
     isOpen: isLoginOpen,
@@ -269,7 +416,13 @@ export default function University({ university }: any) {
     onClose: onLoginClose,
   } = useDisclosure();
 
-  return (
+  const {
+    isOpen: isEmailOpen,
+    onOpen: onEmailOpen,
+    onClose: onEmailClose,
+  } = useDisclosure();
+
+  return !isLoading ? (
     <>
       <Flex
         as="header"
@@ -280,30 +433,61 @@ export default function University({ university }: any) {
         pl="10"
         borderBottom="1px solid gray"
       >
-        <IconButton
-          aria-label="back"
-          icon={<ChevronLeftIcon />}
-          bg="maroon"
-          _hover={{ backgroundColor: "#610018" }}
-          color="gold"
-          onClick={() => router.back()}
-          size="lg"
+        <Flex>
+          <IconButton
+            aria-label="back"
+            icon={<ChevronLeftIcon />}
+            bg="maroon"
+            _hover={{ backgroundColor: "#610018" }}
+            color="gold"
+            onClick={() =>
+              router.push(
+                `/${
+                  university.continent === "Australia/Pacific Islands"
+                    ? "Australia Pacific Islands"
+                    : university.continent
+                }`
+              )
+            }
+            size="lg"
+          />
+        </Flex>
+        <Hide below="sm">
+          <Heading size="xl" ml="40">
+            Eagles Abroad
+          </Heading>
+        </Hide>
+        <EmailModal
+          isOpen={isEmailOpen}
+          onClose={onEmailClose}
+          profile={profile}
         />
-        <Heading size="xl" ml="40">
-          Eagles Abroad
-        </Heading>
+        {profile ? (
+          <></>
+        ) : (
+          <Button
+            size="lg"
+            bgColor={"maroon"}
+            _hover={{ backgroundColor: "#610018" }}
+            color="gold"
+            onClick={onLoginOpen}
+          >
+            See who&apos;s going abroad!
+          </Button>
+        )}
+
         <Button
-          size="lg"
-          bgColor={"maroon"}
-          _hover={{ backgroundColor: "#610018" }}
-          color="gold"
-          onClick={onLoginOpen}
-        >
-          See Who&apos;s Going Abroad
-        </Button>
-        <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
+          onClick={() => {
+            supabase.auth.signOut();
+          }}
+        ></Button>
+        <LoginModal
+          isOpen={isLoginOpen}
+          onClose={onLoginClose}
+          endpoint={`${university.continent}/${university.university}`}
+        />
       </Flex>
-      <Heading size="xl" textAlign={"center"} mt="5">
+      <Heading size={["lg", "xl"]} textAlign={"center"} mt="5">
         {university.university}
       </Heading>
       <HStack align="top" mt="5" mb="10" spacing="10" justify="center">
@@ -314,40 +498,9 @@ export default function University({ university }: any) {
             </Heading>
           </Flex>
           <VStack align="left" spacing="5">
-            <Tag
-              variant="subtle"
-              p="3"
-              color="black"
-              display={"flex"}
-              alignItems="center"
-              outlineColor="maroon"
-              justifyContent={"space-between"}
-            >
-              <Flex ml="2" fontSize="2xl" alignItems={"center"}>
-                <Avatar src="https://lh3.googleusercontent.com/a/AEdFTp5z2K5TWv3Xpd5or8l-bLcEAz2Wo_VB75TmSOFA=s96-c"></Avatar>
-                <Box ml="4">{user ? " " : "????"}</Box>
-              </Flex>
-              <Badge variant="subtle" fontSize="lg" colorScheme="red">
-                Spring
-              </Badge>
-            </Tag>
-            <Tag
-              variant="subtle"
-              p="3"
-              color="black"
-              display={"flex"}
-              alignItems="center"
-              outlineColor="maroon"
-              justifyContent={"space-between"}
-            >
-              <Flex ml="2" fontSize="2xl" alignItems={"center"}>
-                <Avatar></Avatar>
-                <Box ml="4">You?</Box>
-              </Flex>
-              <Badge variant="subtle" fontSize="lg" colorScheme="red">
-                Spring
-              </Badge>
-            </Tag>
+            {profile !== null && profile.abroad_id
+              ? profileTags
+              : hiddenProfileTags}
           </VStack>
         </Box>
         <Box w="50%" bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
@@ -365,6 +518,17 @@ export default function University({ university }: any) {
           </UnorderedList>
         </Box>
       </HStack>
+      {profile && !profile.abroad_id ? (
+        <Footer modalTrigger={onEmailOpen} />
+      ) : (
+        <></>
+      )}
+    </>
+  ) : (
+    <>
+      <Flex>
+        <Spinner />
+      </Flex>
     </>
   );
 }

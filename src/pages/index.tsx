@@ -23,19 +23,25 @@ import {
   Flex,
   useDisclosure,
   Button,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
 import { University } from "index";
 import { useRouter } from "next/router";
 import { Search2Icon } from "@chakra-ui/icons";
 import SearchModal from "components/SearchModal";
 import LoginModal from "components/LoginModal";
+import EmailModal from "components/EmailModal";
+import Footer from "components/Footer";
 
 const Home = () => {
   const router = useRouter();
   const supabase = useSupabaseClient();
+  const [profile, setProfile] = useState<any>(null);
   const [regionState, setRegionState] = useState<any>({});
   const [universityRegionMap, setUniversityRegionMap] = useState<any>({});
   const [universityList, setUniversityList] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const {
     isOpen: isSearchOpen,
@@ -47,6 +53,12 @@ const Home = () => {
     isOpen: isLoginOpen,
     onOpen: onLoginOpen,
     onClose: onLoginClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isEmailOpen,
+    onOpen: onEmailOpen,
+    onClose: onEmailClose,
   } = useDisclosure();
 
   const regions: {
@@ -92,8 +104,34 @@ const Home = () => {
         console.log(error);
       }
     }
+    async function getUser() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    getUniversityData();
+      if (user) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id);
+
+        if (!data) {
+          console.log(error);
+        } else {
+          console.log(data[0]);
+          setProfile(data[0]);
+        }
+      }
+    }
+
+    async function getData() {
+      setIsLoading(true);
+      await getUniversityData();
+      await getUser();
+      setIsLoading(false);
+    }
+
+    getData();
   }, []);
 
   const continentImages = [
@@ -141,7 +179,7 @@ const Home = () => {
     );
   });
 
-  return (
+  return !isLoading ? (
     <>
       <Flex
         as="header"
@@ -150,22 +188,26 @@ const Home = () => {
         padding="5"
         borderBottom="1px solid gray"
       >
-        <Button
-          size="lg"
-          bgColor={"maroon"}
-          _hover={{ backgroundColor: "#610018" }}
-          color="gold"
-          onClick={onLoginOpen}
-        >
-          See Who&apos;s Going Abroad
-        </Button>
+        {profile ? (
+          <></>
+        ) : (
+          <Button
+            size="lg"
+            bgColor={"maroon"}
+            _hover={{ backgroundColor: "#610018" }}
+            color="gold"
+            onClick={onLoginOpen}
+          >
+            See who&apos;s going abroad!
+          </Button>
+        )}
         <LoginModal
           isOpen={isLoginOpen}
           onOpen={onLoginOpen}
           onClose={onLoginClose}
           text={"test"}
         />
-        <Heading size="xl" ml="40">
+        <Heading size="xl" ml={profile ? "0" : "40"}>
           Eagles Abroad
         </Heading>
         <InputGroup
@@ -192,9 +234,27 @@ const Home = () => {
         universityList={universityList}
         universityRegionMap={universityRegionMap}
       />
+      <EmailModal
+        isOpen={isEmailOpen}
+        onClose={onEmailClose}
+        profile={profile}
+      />
       <Wrap justify="center" mt="5" mb="5" w="100%">
         {universityCards}
       </Wrap>
+      {profile && !profile.abroad_id ? (
+        <Footer modalTrigger={onEmailOpen} />
+      ) : (
+        <></>
+      )}
+    </>
+  ) : (
+    <>
+      <Center>
+        <Flex h="100%">
+          <Spinner size="xl" />
+        </Flex>
+      </Center>
     </>
   );
 };

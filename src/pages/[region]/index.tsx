@@ -15,11 +15,14 @@ import {
   Button,
   IconButton,
   HStack,
+  Spinner,
 } from "@chakra-ui/react";
 import SearchModal from "components/SearchModal";
 import CountryModal from "../../../components/CountryModal";
 import { useRouter } from "next/router";
 import LoginModal from "components/LoginModal";
+import Footer from "components/Footer";
+import EmailModal from "components/EmailModal";
 
 const africaImages = [
   "https://images.unsplash.com/photo-1539768942893-daf53e448371?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80",
@@ -176,6 +179,8 @@ export async function getStaticProps({ params }: any) {
 }
 
 export default function Region({ region, countryObject, universityList }: any) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     isOpen: isSearchOpen,
     onOpen: onSearchOpen,
@@ -194,7 +199,41 @@ export default function Region({ region, countryObject, universityList }: any) {
     onClose: onLoginClose,
   } = useDisclosure();
 
+  const {
+    isOpen: isEmailOpen,
+    onOpen: onEmailOpen,
+    onClose: onEmailClose,
+  } = useDisclosure();
+
+  const [profile, setProfile] = useState<any>(null);
+
   const router = useRouter();
+
+  useEffect(() => {
+    async function getUser() {
+      setIsLoading(true);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id);
+
+        if (!data) {
+          console.log(error);
+        } else {
+          console.log(data[0]);
+          setProfile(data[0]);
+        }
+      }
+      setIsLoading(false);
+    }
+
+    getUser();
+  }, []);
 
   const [country, setCountry] = useState("");
   const [countryUniversityList, setCountryUniversityList] = useState<string[]>(
@@ -235,7 +274,7 @@ export default function Region({ region, countryObject, universityList }: any) {
       );
     });
 
-  return (
+  return !isLoading ? (
     <>
       <Flex
         as="header"
@@ -252,17 +291,21 @@ export default function Region({ region, countryObject, universityList }: any) {
             _hover={{ backgroundColor: "#610018" }}
             color="gold"
             size="lg"
-            onClick={() => router.back()}
+            onClick={() => router.push("/")}
           />
-          <Button
-            size="lg"
-            bgColor={"maroon"}
-            _hover={{ backgroundColor: "#610018" }}
-            color="gold"
-            onClick={onLoginOpen}
-          >
-            See Who&apos;s Going Abroad
-          </Button>
+          {profile ? (
+            <></>
+          ) : (
+            <Button
+              size="lg"
+              bgColor={"maroon"}
+              _hover={{ backgroundColor: "#610018" }}
+              color="gold"
+              onClick={onLoginOpen}
+            >
+              See who&apos;s going abroad!
+            </Button>
+          )}
         </HStack>
         <Heading size="xl" ml="40">
           Eagles Abroad
@@ -290,10 +333,34 @@ export default function Region({ region, countryObject, universityList }: any) {
         country={country}
         region={region}
       />
-      <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
+      <LoginModal
+        isOpen={isLoginOpen}
+        onClose={onLoginClose}
+        endpoint={
+          region === "Australia/Pacific Islands"
+            ? "Australia Pacific Islands"
+            : region
+        }
+      />
+      <EmailModal
+        isOpen={isEmailOpen}
+        onClose={onEmailClose}
+        profile={profile}
+      />
       <Wrap justify="center" mt="5" mb="5" w="100%">
         {countryCards}
       </Wrap>
+      {profile && !profile.abroad_id ? (
+        <Footer modalTrigger={onEmailOpen} />
+      ) : (
+        <></>
+      )}
+    </>
+  ) : (
+    <>
+      <Flex>
+        <Spinner />
+      </Flex>
     </>
   );
 }
