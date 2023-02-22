@@ -3,6 +3,7 @@ import {
   Flex,
   Heading,
   Box,
+  Center,
   List,
   ListItem,
   HStack,
@@ -17,6 +18,7 @@ import {
   Hide,
   Spinner,
   Link,
+  Stack,
 } from "@chakra-ui/react";
 import { useUser } from "@supabase/auth-helpers-react";
 import EmailModal from "components/EmailModal";
@@ -24,7 +26,6 @@ import Footer from "components/Footer";
 import LoginModal from "components/LoginModal";
 import { supabase } from "lib/supabaseClient";
 import { useRouter } from "next/router";
-import { send } from "process";
 import React, { useEffect, useState } from "react";
 
 const africanUniversities = [
@@ -263,7 +264,7 @@ export async function getStaticProps({ params }: any) {
       .eq("abroad_id", data[0].key);
 
     if (!profileResponse.data) {
-      console.log(error);
+      console.log("Profile data not found:", error);
       return { notFound: true };
     } else {
       profileData = profileResponse.data;
@@ -279,7 +280,7 @@ export async function getStaticProps({ params }: any) {
 }
 
 export default function University({ university, profiles }: any) {
-  let factList = university.facts.split(".").slice(0, -1);
+  let factList = university.facts.split(". ").slice(0, -1);
 
   const router = useRouter();
   const [profile, setProfile] = useState(null);
@@ -323,17 +324,36 @@ export default function University({ university, profiles }: any) {
         outlineColor="maroon"
         justifyContent={"space-between"}
       >
-        <Flex ml="2" fontSize="2xl" alignItems={"center"}>
-          <Avatar src={`${profile.avatar_url}`}></Avatar>
-          <Box ml="4">{profile.full_name}</Box>
-        </Flex>
-        <Badge
-          variant="subtle"
-          fontSize="lg"
-          colorScheme={profile.abroad_term === "Spring" ? "red" : "yellow"}
+        <Flex
+          ml="2"
+          fontSize={["md", "2xl"]}
+          alignItems={"center"}
+          justifyContent="center"
         >
-          {profile.abroad_term}
-        </Badge>
+          <VStack>
+            <Avatar src={`${profile.avatar_url}`} size="md"></Avatar>
+            <Badge
+              variant="subtle"
+              fontSize="sm"
+              colorScheme={profile.abroad_term === "Spring" ? "red" : "yellow"}
+            >
+              {profile.abroad_term}
+            </Badge>
+          </VStack>
+          <VStack align="left" ml="2" fontSize="lg" spacing="4" mt="3">
+            <Box>{profile.full_name}</Box>
+            <Box>{profile.email}</Box>
+          </VStack>
+        </Flex>
+        <Hide below="sm">
+          <Badge
+            variant="subtle"
+            fontSize={["sm", "lg"]}
+            colorScheme={profile.abroad_term === "Spring" ? "red" : "yellow"}
+          >
+            {profile.abroad_term}
+          </Badge>
+        </Hide>
       </Tag>
     );
   });
@@ -475,12 +495,6 @@ export default function University({ university, profiles }: any) {
             See who&apos;s going abroad!
           </Button>
         )}
-
-        <Button
-          onClick={() => {
-            supabase.auth.signOut();
-          }}
-        ></Button>
         <LoginModal
           isOpen={isLoginOpen}
           onClose={onLoginClose}
@@ -490,8 +504,16 @@ export default function University({ university, profiles }: any) {
       <Heading size={["lg", "xl"]} textAlign={"center"} mt="5">
         {university.university}
       </Heading>
-      <HStack align="top" mt="5" mb="10" spacing="10" justify="center">
-        <Box w="40%" bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
+      <Stack
+        align="top"
+        mt="5"
+        mb="10"
+        spacing="10"
+        ml={['6', '']}
+        justify={"center"}
+        direction={{ base: "column", md: "row", lg: "row", xl: "row" }}
+      >
+        <Box w={["95%", "40%"]} bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
           <Flex justify="center">
             <Heading size="lg" textAlign={"center"} mb="4">
               Who&apos;s Going?
@@ -503,7 +525,7 @@ export default function University({ university, profiles }: any) {
               : hiddenProfileTags}
           </VStack>
         </Box>
-        <Box w="50%" bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
+        <Box w={["95%", "40%"]} bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
           <Heading size="lg" textAlign={"center"} mb="4">
             Quick Facts
           </Heading>
@@ -517,7 +539,7 @@ export default function University({ university, profiles }: any) {
             })}
           </UnorderedList>
         </Box>
-      </HStack>
+      </Stack>
       {profile && !profile.abroad_id ? (
         <Footer modalTrigger={onEmailOpen} />
       ) : (
@@ -526,9 +548,9 @@ export default function University({ university, profiles }: any) {
     </>
   ) : (
     <>
-      <Flex>
-        <Spinner />
-      </Flex>
+      <Center h='100vh' w='100vw'>
+        <Spinner size="xl" />
+      </Center>
     </>
   );
 }

@@ -1,19 +1,11 @@
 import {
-  useSession,
   useSupabaseClient,
-  useUser,
 } from "@supabase/auth-helpers-react";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
-  Image,
-  HStack,
-  VStack,
-  Box,
+  Center,
   Heading,
   WrapItem,
   Wrap,
@@ -24,7 +16,9 @@ import {
   useDisclosure,
   Button,
   Spinner,
-  Center,
+  Hide,
+  Show,
+  Spacer,
 } from "@chakra-ui/react";
 import { University } from "index";
 import { useRouter } from "next/router";
@@ -134,7 +128,7 @@ const Home = () => {
     getData();
   }, []);
 
-  const continentImages = [
+  const regionImages = [
     "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2934&q=80",
     "https://images.unsplash.com/photo-1532236395709-7d70320fec2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1802&q=80",
     "https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2730&q=80",
@@ -153,13 +147,13 @@ const Home = () => {
     router.push(`/${region}`);
   }
 
-  const universityCards = Object.keys(regionState).map((region, idx) => {
+  const regionCards = Object.keys(regionState).map((region, idx) => {
     return (
       <WrapItem key={region}>
         <Card
-          h="lg"
-          w="2xl"
-          bgImage={`linear-gradient(rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0)), url(${continentImages[idx]})`}
+          h={["md", "lg"]}
+          w={["sm", "2xl"]}
+          bgImage={`linear-gradient(rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0)), url(${regionImages[idx]})`}
           bgPosition="center"
           bgSize="cover"
           onClick={() => handleRegionClick(region)}
@@ -170,7 +164,7 @@ const Home = () => {
             alignItems={"center"}
             justifyContent={"center"}
           >
-            <Heading color="#FFF" size="2xl">
+            <Heading color="#FFF" size={["xl", "2xl"]}>
               {region}
             </Heading>
           </CardBody>
@@ -181,10 +175,11 @@ const Home = () => {
 
   return !isLoading ? (
     <>
+      {/* <Hide below="sm"> */}
       <Flex
         as="header"
         align="center"
-        justify="space-between"
+        justify={"space-between"}
         padding="5"
         borderBottom="1px solid gray"
       >
@@ -192,41 +187,44 @@ const Home = () => {
           <></>
         ) : (
           <Button
-            size="lg"
+            size={['md','lg']}
+            // w='2xl'
+            // h='lg'
             bgColor={"maroon"}
             _hover={{ backgroundColor: "#610018" }}
             color="gold"
             onClick={onLoginOpen}
           >
-            See who&apos;s going abroad!
+            Going Abroad?
           </Button>
         )}
         <LoginModal
           isOpen={isLoginOpen}
           onOpen={onLoginOpen}
           onClose={onLoginClose}
-          text={"test"}
         />
-        <Heading size="xl" ml={profile ? "0" : "40"}>
+        <Heading size={["lg", 'xl']} ml={{sm:'auto'}} transform={{xl:"translateX(-50%)"}} left={{xl:"50%"}} position={{xl:"absolute"}}>
           Eagles Abroad
         </Heading>
-        <InputGroup
-          ml="5"
-          size="lg"
-          w="sm"
-          onClick={onSearchOpen}
-          cursor={"pointer"}
-        >
-          <InputLeftElement>
-            <Search2Icon />
-          </InputLeftElement>
-          <Input
-            placeholder="Search all programs"
+        <Hide below='sm'>
+          <InputGroup
+            ml="5"
+            size="lg"
+            w="md"
             onClick={onSearchOpen}
             cursor={"pointer"}
-            isReadOnly={true}
-          />
-        </InputGroup>
+          >
+            <InputLeftElement>
+              <Search2Icon />
+            </InputLeftElement>
+            <Input
+              placeholder="Search all programs"
+              onClick={onSearchOpen}
+              cursor={"pointer"}
+              isReadOnly={true}
+            />
+          </InputGroup>
+          </Hide>
       </Flex>
       <SearchModal
         isSearchOpen={isSearchOpen}
@@ -240,7 +238,7 @@ const Home = () => {
         profile={profile}
       />
       <Wrap justify="center" mt="5" mb="5" w="100%">
-        {universityCards}
+        {regionCards}
       </Wrap>
       {profile && !profile.abroad_id ? (
         <Footer modalTrigger={onEmailOpen} />
@@ -250,10 +248,8 @@ const Home = () => {
     </>
   ) : (
     <>
-      <Center>
-        <Flex h="100%">
-          <Spinner size="xl" />
-        </Flex>
+      <Center h='100vh' w='100vw'>
+        <Spinner size="xl" />
       </Center>
     </>
   );

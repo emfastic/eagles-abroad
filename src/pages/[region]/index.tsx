@@ -16,6 +16,9 @@ import {
   IconButton,
   HStack,
   Spinner,
+  Center,
+  Show,
+  Hide,
 } from "@chakra-ui/react";
 import SearchModal from "components/SearchModal";
 import CountryModal from "../../../components/CountryModal";
@@ -179,7 +182,7 @@ export async function getStaticProps({ params }: any) {
 }
 
 export default function Region({ region, countryObject, universityList }: any) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const {
     isOpen: isSearchOpen,
@@ -252,8 +255,8 @@ export default function Region({ region, countryObject, universityList }: any) {
       return (
         <WrapItem key={idx}>
           <Card
-            h="lg"
-            w="2xl"
+            h={["md", "lg"]}
+            w={["sm", "2xl"]}
             bgImage={`linear-gradient(rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0)), url(${regionImages[region][idx]})`}
             bgPosition="center"
             bgSize="cover"
@@ -266,7 +269,7 @@ export default function Region({ region, countryObject, universityList }: any) {
               justifyContent={"center"}
             >
               <Heading color="#FFF" size="2xl">
-                {country}
+                {country} 
               </Heading>
             </CardBody>
           </Card>
@@ -280,7 +283,7 @@ export default function Region({ region, countryObject, universityList }: any) {
         as="header"
         align="center"
         justify="space-between"
-        padding="5"
+        padding={["3", "5"]}
         borderBottom="1px solid gray"
       >
         <HStack align="center">
@@ -307,9 +310,7 @@ export default function Region({ region, countryObject, universityList }: any) {
             </Button>
           )}
         </HStack>
-        <Heading size="xl" ml="40">
-          Eagles Abroad
-        </Heading>
+        <Hide below='sm'>
         <InputGroup ml="5" size="lg" w="md" onClick={onSearchOpen}>
           <InputLeftElement cursor={"pointer"}>
             <Search2Icon />
@@ -319,6 +320,10 @@ export default function Region({ region, countryObject, universityList }: any) {
             onClick={onSearchOpen}
           />
         </InputGroup>
+        </Hide>
+        <Show below='sm'>
+          <IconButton aria-label="search" icon={<Search2Icon />} bg="maroon" _hover={{ backgroundColor: "#610018" }} color="gold" size="lg" onClick={onSearchOpen} />
+        </Show>
       </Flex>
       <SearchModal
         isSearchOpen={isSearchOpen}
@@ -358,9 +363,9 @@ export default function Region({ region, countryObject, universityList }: any) {
     </>
   ) : (
     <>
-      <Flex>
-        <Spinner />
-      </Flex>
+      <Center h='100vh' w='100vw'>
+        <Spinner size="xl" />
+      </Center>
     </>
   );
 }

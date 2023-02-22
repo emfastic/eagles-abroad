@@ -11,7 +11,7 @@ export default function Footer({ modalTrigger }: any) {
       textAlign="center"
       bg="#F9F5E1"
     >
-      <Text fontSize="2xl">
+      <Text fontSize={"2xl"}>
         To see other students going abroad email{" "}
         <Link color="maroon" onClick={modalTrigger}>
           eaglesabroad@gmail.com
