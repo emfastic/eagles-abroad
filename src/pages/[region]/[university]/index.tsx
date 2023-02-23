@@ -255,12 +255,10 @@ export async function getStaticProps({ params }: any) {
     console.log(error);
     return { notFound: true };
   } else {
-    // let profileResponse = await supabase
-    //   .from("profiles")
-    //   .select("*")
-    //   .eq("abroad_id", data[0].key);
-
-    let profileResponse = {data: null}
+    let profileResponse = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("abroad_id", data[0].key);
 
     if (!profileResponse.data) {
       console.log("Profile data not found:", error);
@@ -472,7 +470,7 @@ export default function University({ university, profiles }: any) {
             </Heading>
           </Flex>
           <VStack align="left" spacing="5">
-            {profile!.abroad_id
+            {profile && profile!.abroad_id
               ? profileTags
               : hiddenProfileTags}
           </VStack>
