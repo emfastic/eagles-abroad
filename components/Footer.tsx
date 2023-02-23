@@ -14,7 +14,7 @@ export default function Footer({ modalTrigger }: any) {
       <Text fontSize={"2xl"}>
         To see other students going abroad email{" "}
         <Link color="maroon" onClick={modalTrigger}>
-          eaglesabroad@gmail.com
+          abroadeagles@gmail.com
         </Link>{" "}
         with your abroad acceptance from your BC email.
       </Text>

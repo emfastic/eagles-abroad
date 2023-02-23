@@ -13,7 +13,7 @@ import {
 
 export default function EmailModal({ isOpen, onClose, profile }: any) {
   function sendEmail() {
-    const recipient = "eaglesabroad@gmail.com";
+    const recipient = "abroadeagles@gmail.com";
 
     const gmailComposeUrl = `https://mail.google.com/mail/u/0/?view=cm&to=${recipient}&su=${profile.full_name} -- Eagles Abroad Verification&body=Attach a screenshot of your abroad acceptance below! Be sure to include your name, program, and term in the screenshot!`;
 
@@ -27,7 +27,7 @@ export default function EmailModal({ isOpen, onClose, profile }: any) {
         <ModalHeader>Send Email</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          Email eaglesabroad@gmail.com with your abroad acceptance to see
+          Email abroadeagles@gmail.com with your abroad acceptance to see
           who&apos;s going abroad!
         </ModalBody>
 
