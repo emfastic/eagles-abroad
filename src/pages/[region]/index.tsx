@@ -26,6 +26,7 @@ import { useRouter } from "next/router";
 import LoginModal from "components/LoginModal";
 import Footer from "components/Footer";
 import EmailModal from "components/EmailModal";
+import CustomHead from "components/CustomHead";
 
 const africaImages = [
   "https://images.unsplash.com/photo-1539768942893-daf53e448371?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80",
@@ -279,6 +280,7 @@ export default function Region({ region, countryObject, universityList }: any) {
 
   return !isLoading ? (
     <>
+    <CustomHead/>
       <Flex
         as="header"
         align="center"

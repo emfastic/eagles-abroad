@@ -17,6 +17,7 @@ import {
   Link,
   Stack,
 } from "@chakra-ui/react";
+import CustomHead from "components/CustomHead";
 import EmailModal from "components/EmailModal";
 import Footer from "components/Footer";
 import LoginModal from "components/LoginModal";
@@ -396,6 +397,7 @@ export default function University({ university }: any) {
 
   return !isLoading ? (
     <>
+    <CustomHead/>
       <Flex
         as="header"
         align="center"

@@ -24,6 +24,8 @@ import SearchModal from "components/SearchModal";
 import LoginModal from "components/LoginModal";
 import EmailModal from "components/EmailModal";
 import Footer from "components/Footer";
+import Head from "next/head";
+import CustomHead from "components/CustomHead";
 
 const Home = () => {
   const router = useRouter();
@@ -162,6 +164,7 @@ const Home = () => {
 
   return !isLoading ? (
     <>
+    <CustomHead/>
       {/* <Hide below="sm"> */}
       <Flex
         as="header"
