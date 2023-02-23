@@ -1,17 +1,14 @@
-import { ChevronLeftIcon, Search2Icon } from "@chakra-ui/icons";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 import {
   Flex,
   Heading,
   Box,
   Center,
-  List,
   ListItem,
-  HStack,
   UnorderedList,
   VStack,
   Tag,
   Avatar,
-  Badge,
   Button,
   IconButton,
   useDisclosure,
@@ -20,7 +17,6 @@ import {
   Link,
   Stack,
 } from "@chakra-ui/react";
-import { useUser } from "@supabase/auth-helpers-react";
 import EmailModal from "components/EmailModal";
 import Footer from "components/Footer";
 import LoginModal from "components/LoginModal";
@@ -284,7 +280,7 @@ export default function University({ university, profiles }: any) {
   let factList = university.facts.split(". ").slice(0, -1);
 
   const router = useRouter();
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -474,7 +470,7 @@ export default function University({ university, profiles }: any) {
             </Heading>
           </Flex>
           <VStack align="left" spacing="5">
-            {profile !== null && profile.abroad_id
+            {profile!.abroad_id
               ? profileTags
               : hiddenProfileTags}
           </VStack>

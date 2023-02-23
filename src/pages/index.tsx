@@ -17,10 +17,7 @@ import {
   Button,
   Spinner,
   Hide,
-  Show,
-  Spacer,
 } from "@chakra-ui/react";
-import { University } from "index";
 import { useRouter } from "next/router";
 import { Search2Icon } from "@chakra-ui/icons";
 import SearchModal from "components/SearchModal";
@@ -55,17 +52,7 @@ const Home = () => {
     onClose: onEmailClose,
   } = useDisclosure();
 
-  const regions: {
-    Africa: string[];
-    Europe: string[];
-    "Middle East": string[];
-    Asia: string[];
-    "Australia/Pacific Islands": string[];
-    "South America": string[];
-    Other: string[];
-    "Central America": string[];
-    "North America": string[];
-  } = {
+  const regions: any = {
     Africa: [],
     Asia: [],
     "Australia/Pacific Islands": [],
@@ -86,7 +73,7 @@ const Home = () => {
       if (data) {
         let universityList: string[] = [];
         let universityRegionMap: any = new Map();
-        data.forEach((university: University) => {
+        data.forEach((university: any) => {
           regions[university.continent].push(university.university);
           universityList.push(university.university);
           universityRegionMap.set(university.university, university.continent);
