@@ -24,6 +24,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import EmailModal from "components/EmailModal";
 import Footer from "components/Footer";
 import LoginModal from "components/LoginModal";
+import ProfileTag from "components/ProfileTag";
 import { supabase } from "lib/supabaseClient";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -314,47 +315,7 @@ export default function University({ university, profiles }: any) {
 
   let profileTags = profiles.map((profile: any) => {
     return (
-      <Tag
-        key={profile.id}
-        variant="subtle"
-        p="3"
-        color="black"
-        display={"flex"}
-        alignItems="center"
-        outlineColor="maroon"
-        justifyContent={"space-between"}
-      >
-        <Flex
-          ml="2"
-          fontSize={["md", "2xl"]}
-          alignItems={"center"}
-          justifyContent="center"
-        >
-          <VStack>
-            <Avatar src={`${profile.avatar_url}`} size="md"></Avatar>
-            <Badge
-              variant="subtle"
-              fontSize="sm"
-              colorScheme={profile.abroad_term === "Spring" ? "red" : "yellow"}
-            >
-              {profile.abroad_term}
-            </Badge>
-          </VStack>
-          <VStack align="left" ml="2" fontSize="lg" spacing="4" mt="3">
-            <Box>{profile.full_name}</Box>
-            <Box>{profile.email}</Box>
-          </VStack>
-        </Flex>
-        <Hide below="sm">
-          <Badge
-            variant="subtle"
-            fontSize={["sm", "lg"]}
-            colorScheme={profile.abroad_term === "Spring" ? "red" : "yellow"}
-          >
-            {profile.abroad_term}
-          </Badge>
-        </Hide>
-      </Tag>
+      <ProfileTag key={profile.id} profile={profile} />
     );
   });
 
@@ -418,13 +379,6 @@ export default function University({ university, profiles }: any) {
             <Avatar></Avatar>
             <Box ml="4">{idx === 2 ? "You?" : "????"}</Box>
           </Flex>
-          <Badge
-            variant="subtle"
-            fontSize="lg"
-            colorScheme={profile.abroad_term === "Spring" ? "red" : "yellow"}
-          >
-            {profile.abroad_term}
-          </Badge>
         </Tag>
       );
     }
