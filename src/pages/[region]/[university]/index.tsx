@@ -255,10 +255,12 @@ export async function getStaticProps({ params }: any) {
     console.log(error);
     return { notFound: true };
   } else {
-    let profileResponse = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("abroad_id", data[0].key);
+    // let profileResponse = await supabase
+    //   .from("profiles")
+    //   .select("*")
+    //   .eq("abroad_id", data[0].key);
+
+    let profileResponse = {data: null}
 
     if (!profileResponse.data) {
       console.log("Profile data not found:", error);
