@@ -20,7 +20,7 @@ export default function ProfileTag({ profile }: any) {
       </VStack></>)
 
     const desktopProfile = (<>
-          <Avatar src="https://lh3.googleusercontent.com/a/AEdFTp5z2K5TWv3Xpd5or8l-bLcEAz2Wo_VB75TmSOFA=s96-c"></Avatar>
+          <Avatar src={`${profile.avatar_url}`}></Avatar>
           <Box ml="4">{profile.full_name}</Box>
           <Box ml="4">{profile.email}</Box>
         </>)
