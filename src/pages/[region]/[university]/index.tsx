@@ -284,29 +284,29 @@ export default function University({ university, profiles }: any) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // async function getUser() {
-    //   setIsLoading(true);
-    //   const {
-    //     data: { user },
-    //   } = await supabase.auth.getUser();
+    async function getUser() {
+      setIsLoading(true);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    //   if (user) {
-    //     const { data, error } = await supabase
-    //       .from("profiles")
-    //       .select("*")
-    //       .eq("id", user.id);
+      if (user) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id);
 
-    //     if (!data) {
-    //       // console.log(error);
-    //     } else {
-    //       // console.log(data[0]);
-    //       setProfile(data[0]);
-    //     }
-    //   }
-    //   setIsLoading(false);
-    // }
+        if (!data) {
+          // console.log(error);
+        } else {
+          // console.log(data[0]);
+          setProfile(data[0]);
+        }
+      }
+      setIsLoading(false);
+    }
 
-    // getUser();
+    getUser();
   }, []);
 
   let profileTags = profiles.map((profile: any) => {
