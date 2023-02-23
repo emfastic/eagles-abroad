@@ -306,7 +306,7 @@ export default function Region({ region, countryObject, universityList }: any) {
               color="gold"
               onClick={onLoginOpen}
             >
-              See who&apos;s going abroad!
+              Going Abroad?
             </Button>
           )}
         </HStack>

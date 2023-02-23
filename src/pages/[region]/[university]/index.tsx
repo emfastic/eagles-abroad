@@ -425,7 +425,8 @@ export default function University({ university }: any) {
           />
         </Flex>
         <Hide below="sm">
-          <Heading size="xl" ml="40">
+          <Heading size="xl" ml="40" bgClip="text"
+  bgGradient="linear(to-t, #800000, #C68E82)">
             Eagles Abroad
           </Heading>
         </Hide>
@@ -444,7 +445,7 @@ export default function University({ university }: any) {
             color="gold"
             onClick={onLoginOpen}
           >
-            See who&apos;s going abroad!
+            Going Abroad?
           </Button>
         )}
         <LoginModal

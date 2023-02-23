@@ -190,9 +190,18 @@ const Home = () => {
           onOpen={onLoginOpen}
           onClose={onLoginClose}
         />
-        <Heading size={["lg", 'xl']} ml={{sm:'auto'}} transform={{xl:"translateX(-50%)"}} left={{xl:"50%"}} position={{xl:"absolute"}}>
-          Eagles Abroad
-        </Heading>
+        <Heading
+  size={["lg", "xl"]}
+  ml={{ sm: "auto" }}
+  transform={{ xl: "translateX(-50%)" }}
+  left={{ xl: "50%" }}
+  position={{ xl: "absolute" }}
+  bgClip="text"
+  bgGradient="linear(to-t, #800000, #C68E82)"
+>
+  Eagles Abroad
+</Heading>
+
         <Hide below='sm'>
           <InputGroup
             ml="5"
