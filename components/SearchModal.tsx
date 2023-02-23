@@ -80,7 +80,7 @@ export default function SearchModal({
       <ModalOverlay />
       <ModalContent>
         <ModalBody p="2" m="0">
-          <InputGroup size="lg" w="lg">
+          <InputGroup size="lg" w={["xs", "lg"]}>
             <InputLeftElement cursor={"pointer"}>
               <Search2Icon />
             </InputLeftElement>

@@ -1,19 +1,11 @@
 import {
-  useSession,
   useSupabaseClient,
-  useUser,
 } from "@supabase/auth-helpers-react";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
-  Image,
-  HStack,
-  VStack,
-  Box,
+  Center,
   Heading,
   WrapItem,
   Wrap,
@@ -23,19 +15,24 @@ import {
   Flex,
   useDisclosure,
   Button,
+  Spinner,
+  Hide,
 } from "@chakra-ui/react";
-import { University } from "index";
 import { useRouter } from "next/router";
 import { Search2Icon } from "@chakra-ui/icons";
 import SearchModal from "components/SearchModal";
 import LoginModal from "components/LoginModal";
+import EmailModal from "components/EmailModal";
+import Footer from "components/Footer";
 
 const Home = () => {
   const router = useRouter();
   const supabase = useSupabaseClient();
+  const [profile, setProfile] = useState<any>(null);
   const [regionState, setRegionState] = useState<any>({});
   const [universityRegionMap, setUniversityRegionMap] = useState<any>({});
   const [universityList, setUniversityList] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const {
     isOpen: isSearchOpen,
@@ -49,17 +46,13 @@ const Home = () => {
     onClose: onLoginClose,
   } = useDisclosure();
 
-  const regions: {
-    Africa: string[];
-    Europe: string[];
-    "Middle East": string[];
-    Asia: string[];
-    "Australia/Pacific Islands": string[];
-    "South America": string[];
-    Other: string[];
-    "Central America": string[];
-    "North America": string[];
-  } = {
+  const {
+    isOpen: isEmailOpen,
+    onOpen: onEmailOpen,
+    onClose: onEmailClose,
+  } = useDisclosure();
+
+  const regions: any = {
     Africa: [],
     Asia: [],
     "Australia/Pacific Islands": [],
@@ -80,7 +73,7 @@ const Home = () => {
       if (data) {
         let universityList: string[] = [];
         let universityRegionMap: any = new Map();
-        data.forEach((university: University) => {
+        data.forEach((university: any) => {
           regions[university.continent].push(university.university);
           universityList.push(university.university);
           universityRegionMap.set(university.university, university.continent);
@@ -92,11 +85,37 @@ const Home = () => {
         console.log(error);
       }
     }
+    async function getUser() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    getUniversityData();
+      if (user) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id);
+
+        if (!data) {
+          console.log(error);
+        } else {
+          console.log(data[0]);
+          setProfile(data[0]);
+        }
+      }
+    }
+
+    async function getData() {
+      setIsLoading(true);
+      await getUniversityData();
+      await getUser();
+      setIsLoading(false);
+    }
+
+    getData();
   }, []);
 
-  const continentImages = [
+  const regionImages = [
     "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2934&q=80",
     "https://images.unsplash.com/photo-1532236395709-7d70320fec2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1802&q=80",
     "https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2730&q=80",
@@ -115,13 +134,13 @@ const Home = () => {
     router.push(`/${region}`);
   }
 
-  const universityCards = Object.keys(regionState).map((region, idx) => {
+  const regionCards = Object.keys(regionState).map((region, idx) => {
     return (
       <WrapItem key={region}>
         <Card
-          h="lg"
-          w="2xl"
-          bgImage={`linear-gradient(rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0)), url(${continentImages[idx]})`}
+          h={["md", "lg"]}
+          w={["sm", "2xl"]}
+          bgImage={`linear-gradient(rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0)), url(${regionImages[idx]})`}
           bgPosition="center"
           bgSize="cover"
           onClick={() => handleRegionClick(region)}
@@ -132,7 +151,7 @@ const Home = () => {
             alignItems={"center"}
             justifyContent={"center"}
           >
-            <Heading color="#FFF" size="2xl">
+            <Heading color="#FFF" size={["xl", "2xl"]}>
               {region}
             </Heading>
           </CardBody>
@@ -141,50 +160,58 @@ const Home = () => {
     );
   });
 
-  return (
+  return !isLoading ? (
     <>
+      {/* <Hide below="sm"> */}
       <Flex
         as="header"
         align="center"
-        justify="space-between"
+        justify={"space-between"}
         padding="5"
         borderBottom="1px solid gray"
       >
-        <Button
-          size="lg"
-          bgColor={"maroon"}
-          _hover={{ backgroundColor: "#610018" }}
-          color="gold"
-          onClick={onLoginOpen}
-        >
-          See Who&apos;s Going Abroad
-        </Button>
+        {profile ? (
+          <></>
+        ) : (
+          <Button
+            size={['md','lg']}
+            // w='2xl'
+            // h='lg'
+            bgColor={"maroon"}
+            _hover={{ backgroundColor: "#610018" }}
+            color="gold"
+            onClick={onLoginOpen}
+          >
+            Going Abroad?
+          </Button>
+        )}
         <LoginModal
           isOpen={isLoginOpen}
           onOpen={onLoginOpen}
           onClose={onLoginClose}
-          text={"test"}
         />
-        <Heading size="xl" ml="40">
+        <Heading size={["lg", 'xl']} ml={{sm:'auto'}} transform={{xl:"translateX(-50%)"}} left={{xl:"50%"}} position={{xl:"absolute"}}>
           Eagles Abroad
         </Heading>
-        <InputGroup
-          ml="5"
-          size="lg"
-          w="sm"
-          onClick={onSearchOpen}
-          cursor={"pointer"}
-        >
-          <InputLeftElement>
-            <Search2Icon />
-          </InputLeftElement>
-          <Input
-            placeholder="Search all programs"
+        <Hide below='sm'>
+          <InputGroup
+            ml="5"
+            size="lg"
+            w="md"
             onClick={onSearchOpen}
             cursor={"pointer"}
-            isReadOnly={true}
-          />
-        </InputGroup>
+          >
+            <InputLeftElement>
+              <Search2Icon />
+            </InputLeftElement>
+            <Input
+              placeholder="Search all programs"
+              onClick={onSearchOpen}
+              cursor={"pointer"}
+              isReadOnly={true}
+            />
+          </InputGroup>
+          </Hide>
       </Flex>
       <SearchModal
         isSearchOpen={isSearchOpen}
@@ -192,9 +219,25 @@ const Home = () => {
         universityList={universityList}
         universityRegionMap={universityRegionMap}
       />
+      <EmailModal
+        isOpen={isEmailOpen}
+        onClose={onEmailClose}
+        profile={profile}
+      />
       <Wrap justify="center" mt="5" mb="5" w="100%">
-        {universityCards}
+        {regionCards}
       </Wrap>
+      {profile && !profile.abroad_id ? (
+        <Footer modalTrigger={onEmailOpen} />
+      ) : (
+        <></>
+      )}
+    </>
+  ) : (
+    <>
+      <Center h='100vh' w='100vw'>
+        <Spinner size="xl" />
+      </Center>
     </>
   );
 };

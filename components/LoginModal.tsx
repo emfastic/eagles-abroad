@@ -11,15 +11,23 @@ import {
   Flex,
   Box,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import GoogleButton from "react-google-button";
 import { supabase } from "../lib/supabaseClient";
 
-export default function LoginModal({ isOpen, onClose }: any) {
+export default function LoginModal({ isOpen, onClose, endpoint = "" }: any) {
   async function handleLogin() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        redirectTo: `http://localhost:3000/${endpoint}`,
+      },
     });
+
+    if (data) {
+      // router.push("/confirm");
+    }
 
     if (error) {
       console.log("error", error);
