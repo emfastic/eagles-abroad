@@ -249,43 +249,27 @@ export async function getStaticProps({ params }: any) {
     .select("*")
     .eq("university", university);
 
-  let profileData = null;
-
   if (!data) {
-    console.log(error);
-    return { notFound: true };
-  } else {
-    let profileResponse = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("abroad_id", data[0].key);
-
-    if (!profileResponse.data) {
-      console.log("Profile data not found:", error);
-      return { notFound: true };
-    } else {
-      profileData = profileResponse.data;
-    }
+    return {notFound: true}
   }
 
   return {
     props: {
       university: data[0],
-      profiles: profileData,
     },
   };
 }
 
-export default function University({ university, profiles }: any) {
+export default function University({ university }: any) {
   let factList = university.facts.split(". ").slice(0, -1);
 
   const router = useRouter();
   const [profile, setProfile] = useState<any>(null);
+  const [profiles, setProfiles] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function getUser() {
-      setIsLoading(true);
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -297,16 +281,34 @@ export default function University({ university, profiles }: any) {
           .eq("id", user.id);
 
         if (!data) {
-          // console.log(error);
         } else {
-          // console.log(data[0]);
           setProfile(data[0]);
         }
       }
+    }
+
+    async function getProfiles() {
+      const {data: profileResponse, error} = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("abroad_id", university.key);
+
+      if (!profileResponse) {
+        console.log("Profile data not found:", error);
+    } else {
+      setProfiles(profileResponse)
+    }
+    }
+
+    async function getData() {
+      setIsLoading(true);
+      await getUser();
+      await getProfiles()  
       setIsLoading(false);
     }
 
-    getUser();
+    getData()
+
   }, []);
 
   let profileTags = profiles.map((profile: any) => {
