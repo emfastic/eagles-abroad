@@ -9,11 +9,11 @@ export default function Footer({ modalTrigger }: any) {
       right="0"
       py={6}
       textAlign="center"
-      bg="#F9F5E1"
+      bg="maroon"
     >
-      <Text fontSize={"2xl"}>
+      <Text fontSize={"2xl"} color='white'>
         To see other students going abroad email{" "}
-        <Link color="maroon" onClick={modalTrigger}>
+        <Link color="gold" onClick={modalTrigger}>
           abroadeagles@gmail.com
         </Link>{" "}
         with your abroad acceptance from your BC email.
