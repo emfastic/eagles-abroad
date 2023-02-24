@@ -1,5 +1,7 @@
 import { Box, Text, Link } from "@chakra-ui/react";
 
+
+
 export default function Footer({ modalTrigger }: any) {
   return (
     <Box
@@ -16,7 +18,8 @@ export default function Footer({ modalTrigger }: any) {
         <Link color="gold" onClick={modalTrigger}>
           abroadeagles@gmail.com
         </Link>{" "}
-        with your abroad acceptance from your BC email.
+        or text <Link href={`sms:7742444886&body=Attach a screenshot of your acceptance here!`} color='gold'>(774) 244-4886</Link>{" "}
+        with your abroad acceptance.
       </Text>
     </Box>
   );
