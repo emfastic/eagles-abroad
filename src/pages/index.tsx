@@ -24,8 +24,8 @@ import SearchModal from "components/SearchModal";
 import LoginModal from "components/LoginModal";
 import EmailModal from "components/EmailModal";
 import Footer from "components/Footer";
-import Head from "next/head";
 import CustomHead from "components/CustomHead";
+import ProfileModal from "components/ProfileModal";
 
 const Home = () => {
   const router = useRouter();
@@ -174,12 +174,10 @@ const Home = () => {
         borderBottom="1px solid gray"
       >
         {profile ? (
-          <></>
+          <ProfileModal profile={profile}/>
         ) : (
           <Button
             size={['md','lg']}
-            // w='2xl'
-            // h='lg'
             bgColor={"maroon"}
             _hover={{ backgroundColor: "#610018" }}
             color="gold"

@@ -21,7 +21,9 @@ import CustomHead from "components/CustomHead";
 import EmailModal from "components/EmailModal";
 import Footer from "components/Footer";
 import LoginModal from "components/LoginModal";
+import ProfileModal from "components/ProfileModal";
 import ProfileTag from "components/ProfileTag";
+import ProfileTagModal from "components/ProfileTagModal";
 import { supabase } from "lib/supabaseClient";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -267,6 +269,7 @@ export default function University({ university }: any) {
   const router = useRouter();
   const [profile, setProfile] = useState<any>(null);
   const [profiles, setProfiles] = useState<any>([]);
+  const [selectedProfile, setSelectedProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -312,9 +315,27 @@ export default function University({ university }: any) {
 
   }, []);
 
+  const {
+    isOpen: isProfileTagOpen,
+    onOpen: onProfileTagOpen,
+    onClose: onProfileTagClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isLoginOpen,
+    onOpen: onLoginOpen,
+    onClose: onLoginClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isEmailOpen,
+    onOpen: onEmailOpen,
+    onClose: onEmailClose,
+  } = useDisclosure();
+
   let profileTags = profiles.map((profile: any) => {
     return (
-      <ProfileTag key={profile.id} profile={profile} />
+      <ProfileTag key={profile.id} profile={profile} onOpen={onProfileTagOpen} setProfile={setSelectedProfile}/>
     );
   });
 
@@ -383,18 +404,6 @@ export default function University({ university }: any) {
     }
   );
 
-  const {
-    isOpen: isLoginOpen,
-    onOpen: onLoginOpen,
-    onClose: onLoginClose,
-  } = useDisclosure();
-
-  const {
-    isOpen: isEmailOpen,
-    onOpen: onEmailOpen,
-    onClose: onEmailClose,
-  } = useDisclosure();
-
   return !isLoading ? (
     <>
     <CustomHead/>
@@ -427,7 +436,7 @@ export default function University({ university }: any) {
           />
         </Flex>
         <Hide below="sm">
-          <Heading size="xl" ml="40" bgClip="text"
+          <Heading size="xl" ml={profile ? "0" : "40"} bgClip="text"
   bgGradient="linear(to-t, #800000, #C68E82)">
             Eagles Abroad
           </Heading>
@@ -438,7 +447,7 @@ export default function University({ university }: any) {
           profile={profile}
         />
         {profile ? (
-          <></>
+          <ProfileModal profile={profile}/>
         ) : (
           <Button
             size="lg"
@@ -468,7 +477,7 @@ export default function University({ university }: any) {
         justify={"center"}
         direction={{ base: "column", md: "row", lg: "row", xl: "row" }}
       >
-        <Box w={["95%", "40%"]} bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
+        <Box w={["95%", "95%", "40%"]} bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
           <Flex justify="center">
             <Heading size="lg" textAlign={"center"} mb="4">
               Who&apos;s Going?
@@ -479,8 +488,9 @@ export default function University({ university }: any) {
               ? profileTags
               : hiddenProfileTags}
           </VStack>
+          <ProfileTagModal isOpen={isProfileTagOpen} onClose={onProfileTagClose} profile={selectedProfile}/>
         </Box>
-        <Box w={["95%", "40%"]} bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
+        <Box w={["95%", "95%", "40%"]} bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
           <Heading size="lg" textAlign={"center"} mb="4">
             Quick Facts
           </Heading>
