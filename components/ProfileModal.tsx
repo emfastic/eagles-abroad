@@ -35,6 +35,8 @@ export default function ProfileModal({profile}: any) {
       .update({ instagram: instagram, snapchat: snapchat, twitter: twitter })
       .eq('id', profile.id)
 
+    onClose()
+
     if (error) {
       toast({
         title: "Error updating profile, try again!",
