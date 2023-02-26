@@ -59,7 +59,7 @@ export default function ProfileModal({profile}: any) {
     <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader fontSize='2xl'>Jake Ottiger</ModalHeader>
+          <ModalHeader fontSize='2xl'>{profile.full_name}</ModalHeader>
           <ModalCloseButton onClick={onClose}/>
           <ModalBody>
             <InputGroup>
