@@ -33,7 +33,7 @@ export default function ProfileModal({profile}: any) {
     const { data, error } = await supabase
       .from('profiles')
       .update({ instagram: instagram, snapchat: snapchat, twitter: twitter })
-      .eq('id', '57c7e42d-5e4e-4687-889e-5a49f77d081e')
+      .eq('id', profile.id)
 
     if (error) {
       toast({
