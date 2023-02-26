@@ -64,15 +64,15 @@ export default function ProfileModal({profile}: any) {
           <ModalBody>
             <InputGroup>
               <InputLeftElement><InstaIcon boxSize={6}/></InputLeftElement>
-              <Input placeholder="jakeottiger" ref={instagram} />
+              <Input placeholder="jakeottiger" ref={instagram} defaultValue={profile.instagram ? profile.instagram : ""}/>
             </InputGroup>
             <InputGroup mt={4}>
               <InputLeftElement><SnapIcon boxSize={6} /></InputLeftElement>
-              <Input placeholder="username" ref={snapchat} />
+              <Input placeholder="username" ref={snapchat} defaultValue={profile.snapchat ? profile.snapchat : ""}/>
             </InputGroup>
             <InputGroup mt={4}>
               <InputLeftElement><TwitterIcon boxSize={6} /></InputLeftElement>
-              <Input placeholder="jakeottiger" ref={twitter} />
+              <Input placeholder="jakeottiger" ref={twitter} defaultValue={profile.twitter ? profile.twitter : ""}/>
             </InputGroup>
           </ModalBody>
           <ModalFooter justifyContent='right'>
