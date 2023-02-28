@@ -67,8 +67,10 @@ const Home = () => {
   useEffect(() => {
     async function getUniversityData() {
       const { data, error } = await supabase
-        .from("abroad-locations")
+        .from("full-abroad-locations")
         .select("university, continent");
+
+      console.log(data);
 
       if (data) {
         let universityList: string[] = [];

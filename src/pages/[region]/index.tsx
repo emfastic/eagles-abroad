@@ -157,7 +157,7 @@ export async function getStaticProps({ params }: any) {
   let universityList: string[] = [];
 
   const { data, error } = await supabase
-    .from("abroad-locations")
+    .from("full-abroad-locations")
     .select("*")
     .eq("continent", region);
 

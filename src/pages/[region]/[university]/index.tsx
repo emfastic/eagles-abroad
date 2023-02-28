@@ -43,6 +43,11 @@ const africanUniversities = [
   "External: SIT Study Abroad Tanzania - Wildlife Conservation and Political Ecology",
   "External: SIT Study Abroad Tanzania - Zanzibar Coastal Ecology and Natural Resource Management",
   "External: SIT Study Abroad Uganda - Development Studies",
+  "Summer - Global Health Delivery and Health Equity: A South African Context",
+  "Summer - South Africa: Religion Justice & Reconciliation Cape Town",
+  "Summer - South Africa: Religion Justice & Reconciliation Durban",
+  "Summer - South Africa: Religion Justice & Reconciliation Johannesburg",
+  "Summer - South Africa: Religion Justice & Reconciliation Pretoria",
 ];
 
 const europeanUniversities = [
@@ -129,6 +134,23 @@ const europeanUniversities = [
   "University of Oxford - Mansfield College",
   "Venice International University",
   "Vienna University of Economics and Business (WU)",
+  "International Summer Internships: Stockholm",
+  "Summer - Art and Patronage in Renaissance and Baroque Rome and Beyond",
+  "Summer - Borders and Refugees: The Ethics of Migration",
+  "Summer - Drawing from the City of Lights",
+  "Summer - Environment Law and Policy in the US and Europe",
+  "Summer - History of the Italian Mediterranean: Una Faccia",
+  "Summer - Marketing for Digital Nomads: Building the Skills You Need for the Remote Work Revolution",
+  "Summer - Modernism in Paris",
+  "Summer - Philosophy of Beauty: Philosophy of the Person II",
+  "Summer - Provence: Art Culture Cinema Diversity",
+  "Summer - Saints and Sinners",
+  "Summer - Spanish Art History: from Al-Andalus to Picasso",
+  "Summer - The Business History & Politics of Sport",
+  "Summer - The European Union: The Economic and Political Shaping of Europe",
+  "Summer - The Neuroscience of Spirituality: Exploring Religion and the Brain",
+  "Summer - Topics in Computer Science: Unlocking the Language Code (Computer Parsing and Acquisition of Grammar)",
+  "Summer - Work Life and Retirement in Ireland and the United States",
 ];
 
 const middleEasternUniversities = [
@@ -136,6 +158,7 @@ const middleEasternUniversities = [
   "External: CET - Middle East Studies and Internship in Jordan",
   "External: SIT Study Abroad Jordan - Refugees Health and Humanitarian Action",
   "External: University of Haifa International School",
+  "Summer - Studying an Innovative Economy: Start Ups In Israel",
 ];
 
 const asianUniversities = [
@@ -161,6 +184,10 @@ const asianUniversities = [
   "Sophia University",
   "University of Hong Kong (HKU)",
   "Waseda University",
+  "International Summer Internships: Seoul",
+  "International Summer Internships: Singapore",
+  "International Summer Internships: Tokyo",
+  "Summer - Contentious History and the Politics of Contemporary Korea",
 ];
 
 const australianUniversities = [
@@ -186,6 +213,10 @@ const southAmericanUniversities = [
   "Pontificia Universidad Católica de Chile (PUC-Chile)",
   "Pontificia Universidad Javeriana",
   "Universidad Alberto Hurtado (UAH)",
+  "International Summer Internships: Buenos Aires",
+  "International Summer Internships: Montevideo",
+  "Summer - Collaborative Service Engineering Project or Innovation through Design Thinking in Ecuador",
+  "Summer - Global Health Perspectives",
 ];
 
 const otherUniversities = [
@@ -198,6 +229,7 @@ const centralAmericanUniversities = [
   "External: Augsburg CGEE: New Activisms Human Rights and Social Justice",
   "External: IFSA Universidad de La Habana (Havana Cuba)",
   "External: SIT Study Abroad Panama - Tropical Ecology Marine Ecosystems and Biodiversity Conservation",
+  "Summer - SPAN2215-CCR1: Composition Conversation and Reading I",
 ];
 
 const northAmericanUniversities = ["Universidad Iberoamericana: Mexico City"];
@@ -248,7 +280,7 @@ export async function getStaticProps({ params }: any) {
   const { university } = params;
 
   const { data, error } = await supabase
-    .from("abroad-locations")
+    .from("full-abroad-locations")
     .select("*")
     .eq("university", university);
 
