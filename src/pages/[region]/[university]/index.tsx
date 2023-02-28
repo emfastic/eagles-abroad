@@ -253,7 +253,7 @@ export async function getStaticProps({ params }: any) {
     .eq("university", university);
 
   if (!data) {
-    return {notFound: true}
+    return { notFound: true };
   }
 
   return {
@@ -267,7 +267,7 @@ export default function University({ university }: any) {
   let factList = university.facts.split(". ").slice(0, -1);
 
   const router = useRouter();
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<any>({ abroad_id: 1 });
   const [profiles, setProfiles] = useState<any>([]);
   const [selectedProfile, setSelectedProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -292,27 +292,26 @@ export default function University({ university }: any) {
     }
 
     async function getProfiles() {
-      const {data: profileResponse, error} = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("abroad_id", university.key);
+      const { data: profileResponse, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("abroad_id", university.key);
 
       if (!profileResponse) {
         console.log("Profile data not found:", error);
-    } else {
-      setProfiles(profileResponse)
-    }
+      } else {
+        setProfiles(profileResponse);
+      }
     }
 
     async function getData() {
       setIsLoading(true);
       await getUser();
-      await getProfiles()  
+      await getProfiles();
       setIsLoading(false);
     }
 
-    getData()
-
+    getData();
   }, []);
 
   const {
@@ -333,9 +332,24 @@ export default function University({ university }: any) {
     onClose: onEmailClose,
   } = useDisclosure();
 
-  let profileTags = profiles.map((profile: any) => {
+  function compareProfiles(a: any, b: any) {
+    if (a.abroad_term < b.abroad_term) {
+      return -1;
+    }
+    if (a.abroad_term > b.abroad_term) {
+      return 1;
+    }
+    return 0;
+  }
+
+  let profileTags = profiles.sort(compareProfiles).map((profile: any) => {
     return (
-      <ProfileTag key={profile.id} profile={profile} onOpen={onProfileTagOpen} setProfile={setSelectedProfile}/>
+      <ProfileTag
+        key={profile.id}
+        profile={profile}
+        onOpen={onProfileTagOpen}
+        setProfile={setSelectedProfile}
+      />
     );
   });
 
@@ -406,7 +420,7 @@ export default function University({ university }: any) {
 
   return !isLoading ? (
     <>
-    <CustomHead/>
+      <CustomHead />
       <Flex
         as="header"
         align="center"
@@ -436,8 +450,12 @@ export default function University({ university }: any) {
           />
         </Flex>
         <Hide below="sm">
-          <Heading size="xl" ml={profile ? "0" : "40"} bgClip="text"
-  bgGradient="linear(to-t, #800000, #C68E82)">
+          <Heading
+            size="xl"
+            ml={profile ? "0" : "40"}
+            bgClip="text"
+            bgGradient="linear(to-t, #800000, #C68E82)"
+          >
             Eagles Abroad
           </Heading>
         </Hide>
@@ -447,7 +465,7 @@ export default function University({ university }: any) {
           profile={profile}
         />
         {profile ? (
-          <ProfileModal profile={profile}/>
+          <ProfileModal profile={profile} />
         ) : (
           <Button
             size="lg"
@@ -473,24 +491,38 @@ export default function University({ university }: any) {
         mt="5"
         mb="10"
         spacing="10"
-        ml={['6', '']}
+        ml={["6", ""]}
         justify={"center"}
         direction={{ base: "column", md: "row", lg: "row", xl: "row" }}
       >
-        <Box w={["95%", "95%", "40%"]} bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
+        <Box
+          w={["95%", "95%", "40%"]}
+          bg="#F9F5E1"
+          p="10"
+          pt="7"
+          borderRadius={"3xl"}
+        >
           <Flex justify="center">
             <Heading size="lg" textAlign={"center"} mb="4">
               Who&apos;s Going?
             </Heading>
           </Flex>
           <VStack align="left" spacing="5">
-            {profile && profile!.abroad_id
-              ? profileTags
-              : hiddenProfileTags}
+            {profile && profile!.abroad_id ? profileTags : hiddenProfileTags}
           </VStack>
-          <ProfileTagModal isOpen={isProfileTagOpen} onClose={onProfileTagClose} profile={selectedProfile}/>
+          <ProfileTagModal
+            isOpen={isProfileTagOpen}
+            onClose={onProfileTagClose}
+            profile={selectedProfile}
+          />
         </Box>
-        <Box w={["95%", "95%", "40%"]} bg="#F9F5E1" p="10" pt="7" borderRadius={"3xl"}>
+        <Box
+          w={["95%", "95%", "40%"]}
+          bg="#F9F5E1"
+          p="10"
+          pt="7"
+          borderRadius={"3xl"}
+        >
           <Heading size="lg" textAlign={"center"} mb="4">
             Quick Facts
           </Heading>
@@ -513,7 +545,7 @@ export default function University({ university }: any) {
     </>
   ) : (
     <>
-      <Center h='100vh' w='100vw'>
+      <Center h="100vh" w="100vw">
         <Spinner size="xl" />
       </Center>
     </>

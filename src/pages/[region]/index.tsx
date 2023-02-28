@@ -230,7 +230,6 @@ export default function Region({ region, countryObject, universityList }: any) {
         if (!data) {
           console.log(error);
         } else {
-          console.log(data[0]);
           setProfile(data[0]);
         }
       }
@@ -271,7 +270,7 @@ export default function Region({ region, countryObject, universityList }: any) {
               justifyContent={"center"}
             >
               <Heading color="#FFF" size="2xl">
-                {country} 
+                {country}
               </Heading>
             </CardBody>
           </Card>
@@ -281,7 +280,7 @@ export default function Region({ region, countryObject, universityList }: any) {
 
   return !isLoading ? (
     <>
-    <CustomHead/>
+      <CustomHead />
       <Flex
         as="header"
         align="center"
@@ -300,7 +299,7 @@ export default function Region({ region, countryObject, universityList }: any) {
             onClick={() => router.push("/")}
           />
           {profile ? (
-            <ProfileModal profile={profile}/>
+            <ProfileModal profile={profile} />
           ) : (
             <Button
               size="lg"
@@ -313,19 +312,27 @@ export default function Region({ region, countryObject, universityList }: any) {
             </Button>
           )}
         </HStack>
-        <Hide below='sm'>
-        <InputGroup ml="5" size="lg" w="md" onClick={onSearchOpen}>
-          <InputLeftElement cursor={"pointer"}>
-            <Search2Icon />
-          </InputLeftElement>
-          <Input
-            placeholder={`Search ${region} programs`}
+        <Hide below="sm">
+          <InputGroup ml="5" size="lg" w="md" onClick={onSearchOpen}>
+            <InputLeftElement cursor={"pointer"}>
+              <Search2Icon />
+            </InputLeftElement>
+            <Input
+              placeholder={`Search ${region} programs`}
+              onClick={onSearchOpen}
+            />
+          </InputGroup>
+        </Hide>
+        <Show below="sm">
+          <IconButton
+            aria-label="search"
+            icon={<Search2Icon />}
+            bg="maroon"
+            _hover={{ backgroundColor: "#610018" }}
+            color="gold"
+            size="lg"
             onClick={onSearchOpen}
           />
-        </InputGroup>
-        </Hide>
-        <Show below='sm'>
-          <IconButton aria-label="search" icon={<Search2Icon />} bg="maroon" _hover={{ backgroundColor: "#610018" }} color="gold" size="lg" onClick={onSearchOpen} />
         </Show>
       </Flex>
       <SearchModal
@@ -366,7 +373,7 @@ export default function Region({ region, countryObject, universityList }: any) {
     </>
   ) : (
     <>
-      <Center h='100vh' w='100vw'>
+      <Center h="100vh" w="100vw">
         <Spinner size="xl" />
       </Center>
     </>
