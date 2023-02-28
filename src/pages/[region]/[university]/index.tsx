@@ -44,10 +44,7 @@ const africanUniversities = [
   "External: SIT Study Abroad Tanzania - Zanzibar Coastal Ecology and Natural Resource Management",
   "External: SIT Study Abroad Uganda - Development Studies",
   "Summer - Global Health Delivery and Health Equity: A South African Context",
-  "Summer - South Africa: Religion Justice & Reconciliation Cape Town",
-  "Summer - South Africa: Religion Justice & Reconciliation Durban",
-  "Summer - South Africa: Religion Justice & Reconciliation Johannesburg",
-  "Summer - South Africa: Religion Justice & Reconciliation Pretoria",
+  "Summer - South Africa: Religion Justice & Reconciliation",
 ];
 
 const europeanUniversities = [
