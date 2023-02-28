@@ -267,7 +267,7 @@ export default function University({ university }: any) {
   let factList = university.facts.split(". ").slice(0, -1);
 
   const router = useRouter();
-  const [profile, setProfile] = useState<any>({ abroad_id: 1 });
+  const [profile, setProfile] = useState<any>(null);
   const [profiles, setProfiles] = useState<any>([]);
   const [selectedProfile, setSelectedProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);

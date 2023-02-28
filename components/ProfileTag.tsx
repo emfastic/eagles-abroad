@@ -149,7 +149,6 @@ export default function ProfileTag({ profile, onOpen, setProfile }: any) {
               bg={"gold"}
               _hover={{ backgroundColor: "#C7A23D" }}
               h={6}
-              mr={profile.abroad_term !== "Spring" ? "6" : "0"}
               boxSize={6}
               onClick={handleProfileClick}
               icon={<EmailIcon color="maroon" />}
