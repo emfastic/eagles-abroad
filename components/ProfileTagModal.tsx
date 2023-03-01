@@ -28,7 +28,7 @@ export default function ProfileTagModal({ isOpen, onClose, profile }: any) {
               {profile.instagram ? (
                 <HStack spacing="4">
                   <InstaIcon boxSize="2em" />
-                  <Box>{profile.instagram.toLowerCase()}</Box>
+                  <Box>{profile.instagram}</Box>
                 </HStack>
               ) : (
                 <></>
@@ -36,7 +36,7 @@ export default function ProfileTagModal({ isOpen, onClose, profile }: any) {
               {profile.snapchat ? (
                 <HStack spacing="4">
                   <SnapIcon boxSize="2em" />
-                  <Box>{profile.snapchat.toLowerCase()}</Box>
+                  <Box>{profile.snapchat}</Box>
                 </HStack>
               ) : (
                 <></>
@@ -44,7 +44,7 @@ export default function ProfileTagModal({ isOpen, onClose, profile }: any) {
               {profile.twitter ? (
                 <HStack spacing="4">
                   <TwitterIcon boxSize="2em" />
-                  <Box>{profile.twitter.toLowerCase()}</Box>
+                  <Box>{profile.twitter}</Box>
                 </HStack>
               ) : (
                 <></>
