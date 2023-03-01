@@ -96,7 +96,9 @@ export default function ProfileModal({ profile }: any) {
               <Input
                 placeholder="jakeottiger"
                 ref={instagram}
-                defaultValue={profile.instagram ? profile.instagram : ""}
+                defaultValue={
+                  profile.instagram ? profile.instagram.toLowerCase() : ""
+                }
               />
             </InputGroup>
             <InputGroup mt={4}>
@@ -106,7 +108,9 @@ export default function ProfileModal({ profile }: any) {
               <Input
                 placeholder="username"
                 ref={snapchat}
-                defaultValue={profile.snapchat ? profile.snapchat : ""}
+                defaultValue={
+                  profile.snapchat ? profile.snapchat.toLowerCase() : ""
+                }
               />
             </InputGroup>
             <InputGroup mt={4}>
@@ -116,7 +120,9 @@ export default function ProfileModal({ profile }: any) {
               <Input
                 placeholder="jakeottiger"
                 ref={twitter}
-                defaultValue={profile.twitter ? profile.twitter : ""}
+                defaultValue={
+                  profile.twitter ? profile.twitter.toLowercase() : ""
+                }
               />
             </InputGroup>
           </ModalBody>
