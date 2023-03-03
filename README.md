@@ -1,6 +1,6 @@
 # [Eagles Abroad](https://eaglesabroad.com)
 
-![Eagles Abroad Banner](./eagles-abroad/public/og-image.png)
+![Eagles Abroad Banner](./public/og-image.png)
 
 Eagles Abroad is a website aimed at helping Boston College students navigate studying abroad. The site has received **55,000** page views and **1,500** unique visitors since launch. 
 
