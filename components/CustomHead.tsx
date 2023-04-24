@@ -26,6 +26,14 @@ export default function CustomHead() {
       <meta name="msapplication-TileColor" content="#800000" />
       <meta name="theme-color" content="#ffffff"></meta>
       <meta name="og:image" content="/og-image"></meta>
+      <meta
+        name="description"
+        content="Eagles Abroad - Explore Boston College study abroad programs and opportunities, learn from students' experiences, and prepare for your own adventure."
+      ></meta>
+      <meta
+        name="keywords"
+        content="study abroad, Boston College, Eagles Abroad, international education, exchange programs, semester abroad, summer programs"
+      ></meta>
       <title>Eagles Abroad</title>
     </Head>
   );
