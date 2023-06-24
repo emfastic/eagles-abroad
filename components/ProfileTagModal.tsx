@@ -22,7 +22,7 @@ export default function ProfileTagModal({ isOpen, onClose, profile }: any) {
         <ModalOverlay />
         <ModalContent pb="3">
           <ModalHeader fontSize="2xl">{profile.full_name}</ModalHeader>
-          <ModalCloseButton onClick={onClose} />
+          <ModalCloseButton />
           <ModalBody>
             <VStack align="left">
               {profile.instagram ? (

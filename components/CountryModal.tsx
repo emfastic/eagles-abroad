@@ -13,6 +13,7 @@ import {
   Divider,
   Flex,
 } from "@chakra-ui/react";
+import mixpanel from "mixpanel-browser";
 
 export default function CountryModal({
   isOpen,
@@ -20,6 +21,7 @@ export default function CountryModal({
   universityList,
   country,
   region,
+  profile,
 }: any) {
   const router = useRouter();
 
@@ -51,6 +53,11 @@ export default function CountryModal({
                   if (region === "Australia/Pacific Islands") {
                     region = "Australia Pacific Islands";
                   }
+                  mixpanel.identify(profile?.email);
+                  mixpanel.track("University Click", {
+                    university: university,
+                    type: "country modal",
+                  });
                   router.push(`/${region}/${university}`);
                 }}
               >

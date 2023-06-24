@@ -2,8 +2,13 @@ import { useState } from "react";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { AppProps } from "next/app";
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from "@vercel/analytics/react";
 import { ChakraProvider } from "@chakra-ui/react";
+import mixpanel from "mixpanel-browser";
+
+mixpanel.init(process.env.MIXPANEL_TOKEN || "", {
+  ignore_dnt: true,
+});
 
 function MyApp({
   Component,

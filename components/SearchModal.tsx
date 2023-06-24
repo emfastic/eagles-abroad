@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import mixpanel from "mixpanel-browser";
 
 export default function SearchModal({
   isSearchOpen,
@@ -24,6 +25,7 @@ export default function SearchModal({
   universityList,
   region,
   universityRegionMap,
+  profile,
 }: any) {
   const [searchResults, setSearchResults] = useState<any>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -56,16 +58,27 @@ export default function SearchModal({
           backgroundColor: "#610018",
         }}
         onClick={() => {
+          mixpanel.identify(profile?.email);
           if (region) {
             if (region === "Australia/Pacific Islands") {
               region = "Australia Pacific Islands";
             }
+            mixpanel.track("University Click", {
+              type: "search",
+              university: university,
+              page: region,
+            });
             router.push(`/${region}/${university}`);
           } else {
             let region = universityRegionMap.get(university);
             if (region === "Australia/Pacific Islands") {
               region = "Australia Pacific Islands";
             }
+            mixpanel.track("University Click", {
+              type: "search",
+              university: university,
+              page: "Home",
+            });
             router.push(`/${region}/${university}`);
           }
         }}

@@ -24,6 +24,7 @@ import EmailModal from "components/EmailModal";
 import Footer from "components/Footer";
 import CustomHead from "components/CustomHead";
 import ProfileModal from "components/ProfileModal";
+import mixpanel from "mixpanel-browser";
 
 const Home = () => {
   const router = useRouter();
@@ -36,9 +37,16 @@ const Home = () => {
 
   const {
     isOpen: isSearchOpen,
-    onOpen: onSearchOpen,
+    onOpen: onSearchClick,
     onClose: onSearchClose,
   } = useDisclosure();
+
+  const onSearchOpen = () => {
+    mixpanel.track("Search Opened", {
+      page: "Home",
+    });
+    onSearchClick();
+  };
 
   const {
     isOpen: isLoginOpen,
@@ -70,8 +78,6 @@ const Home = () => {
         .from("full-abroad-locations")
         .select("university, continent");
 
-      console.log(data);
-
       if (data) {
         let universityList: string[] = [];
         let universityRegionMap: any = new Map();
@@ -101,7 +107,8 @@ const Home = () => {
         if (!data) {
           console.log(error);
         } else {
-          console.log(data[0]);
+          mixpanel.identify(data[0].email);
+          // console.log(data[0]);
           setProfile(data[0]);
         }
       }
@@ -134,6 +141,9 @@ const Home = () => {
       region = "Australia Pacific Islands";
     }
     router.push(`/${region}`);
+    mixpanel.track("Region Click", {
+      region: region,
+    });
   }
 
   const regionCards = Object.keys(regionState).map((region, idx) => {

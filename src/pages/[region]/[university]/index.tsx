@@ -26,6 +26,7 @@ import ProfileTag from "components/ProfileTag";
 import ProfileTagModal from "components/ProfileTagModal";
 import { supabase } from "lib/supabaseClient";
 import { useRouter } from "next/router";
+import mixpanel from "mixpanel-browser";
 import React, { useEffect, useState } from "react";
 
 const africanUniversities = [
@@ -315,6 +316,7 @@ export default function University({ university }: any) {
 
         if (!data) {
         } else {
+          mixpanel.identify(data[0].email);
           setProfile(data[0]);
         }
       }
@@ -349,6 +351,16 @@ export default function University({ university }: any) {
     onClose: onProfileTagClose,
   } = useDisclosure();
 
+  const openProfile = () => {
+    mixpanel.track("Profile Tag Opened", {
+      university: university.university,
+      continent: university.continent,
+      country: university.country,
+      profile: selectedProfile,
+    });
+    onProfileTagOpen();
+  };
+
   const {
     isOpen: isLoginOpen,
     onOpen: onLoginOpen,
@@ -376,7 +388,7 @@ export default function University({ university }: any) {
       <ProfileTag
         key={profile.id}
         profile={profile}
-        onOpen={onProfileTagOpen}
+        onOpen={openProfile}
         setProfile={setSelectedProfile}
       />
     );

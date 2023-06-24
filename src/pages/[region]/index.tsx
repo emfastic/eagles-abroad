@@ -28,6 +28,7 @@ import Footer from "components/Footer";
 import EmailModal from "components/EmailModal";
 import CustomHead from "components/CustomHead";
 import ProfileModal from "components/ProfileModal";
+import mixpanel from "mixpanel-browser";
 
 const africaImages = [
   "https://images.unsplash.com/photo-1539768942893-daf53e448371?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80",
@@ -189,9 +190,16 @@ export default function Region({ region, countryObject, universityList }: any) {
 
   const {
     isOpen: isSearchOpen,
-    onOpen: onSearchOpen,
+    onOpen: onSearchClick,
     onClose: onSearchClose,
   } = useDisclosure();
+
+  const onSearchOpen = () => {
+    onSearchClick();
+    mixpanel.track("Search Opened", {
+      page: region,
+    });
+  };
 
   const {
     isOpen: isCountryModalOpen,
@@ -232,6 +240,7 @@ export default function Region({ region, countryObject, universityList }: any) {
           console.log(error);
         } else {
           setProfile(data[0]);
+          mixpanel.identify(data[0].email);
         }
       }
       setIsLoading(false);
@@ -249,6 +258,9 @@ export default function Region({ region, countryObject, universityList }: any) {
     setCountry(country);
     setCountryUniversityList(countryObject[country]);
     onCountryModalOpen();
+    mixpanel.track("Country Click", {
+      country: country,
+    });
   }
 
   const countryCards = Object.keys(countryObject)
@@ -348,6 +360,7 @@ export default function Region({ region, countryObject, universityList }: any) {
         universityList={countryUniversityList}
         country={country}
         region={region}
+        profile={profile || null}
       />
       <LoginModal
         isOpen={isLoginOpen}
