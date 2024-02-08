@@ -21,7 +21,7 @@ export default function Footer({ modalTrigger }: any) {
           href={`sms:7742444886&body=Attach a screenshot of your acceptance here!`}
           color="gold"
         >
-          (774) 244-4886
+          (216) 225-2483
         </Link>{" "}
         with your abroad acceptance.
       </Text>
